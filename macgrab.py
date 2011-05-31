@@ -39,6 +39,11 @@ def getConfig():
 		# Write the newly generated config file
 		with open(os.path.join(config_path, "macgrab.conf"), 'wb') as file:
 			config.write(file)
+
+		# Make an uploaded.db file
+		with open(os.path.join(config_path, "uploaded.db"), 'w') as file:
+			file.write('# This file stores the filenames of screenshots already uploaded\n')
+			file.close()
 	
 	return config
 
@@ -67,6 +72,22 @@ def upload(path):
 		return (True, resp['image'])
 	else:
 		return (False, resp['error_msg'])
+
+def write(filename):
+	""" Writes the filename to the database so we know not to upload it again"""
+	f = open(os.path.join(os.path.expanduser('~'), '.macgrab/uploaded.db'), 'a')
+	f.write(filename + "\n")
+	f.close()
+
+def uploaded(filename):
+	""" Reads the database file and tells us if filename has already been uploaded or not """
+	f = open(os.path.join(os.path.expanduser('~'), '.macgrab/uploaded.db'), 'r')
+	for line in f.readlines():
+		if filename == line.replace('\n', ''):
+			return True
+	f.close()
+	# We never detected it, so return false
+	return False
 
 # Run tests
 if __name__ == "__main__":
