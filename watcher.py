@@ -26,6 +26,16 @@ while 1:
 			
 	if len(screenshots) > 0:
 		logging.info("Found screenshots to upload: %s" % screenshots)
+		
+		for screenshot in screenshots:
+			# Attempt to upload the image
+			status, resp = macgrab.upload(os.path.join(watch_path, screenshot))
+
+			# If it worked, tell us the URL, else tell us what went wrong.
+			if status:
+				print "Screenshot uploaded successfully! URL is %s" % resp['original_image']
+			else:
+				print "There was an error while trying to upload the screenshot: %s" % resp
 	
 	# Sleep for a bit, since we don't need to be doing this all the time.
 	time.sleep(1)
