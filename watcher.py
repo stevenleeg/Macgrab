@@ -6,7 +6,7 @@
 #
 import os, time, re, logging
 import macgrab
-from AppKit import NSPasteboard
+from AppKit import NSPasteboard, NSSound
 
 # Get the config file
 config = macgrab.getConfig()
@@ -14,6 +14,11 @@ watch_path = config.get("general","watch_path")
 
 # Compile the regex used to identify screenshots
 screenshot_regex = re.compile("Screen shot ([0-9]{4})-([0-9]{2})-([0-9]{2}) at (1?[0-9]).([0-9]{2}).([0-9]{2}) ([A|PM]{2}).png")	
+
+# Setup the NSSound object for the "Success" notification
+#TODO: Add a config option for the sound
+notif = NSSound.alloc()
+notif.initWithContentsOfFile_byReference_('/System/Library/Sounds/Purr.aiff', True)
 
 while 1:
 	# Get a list of filenames in the watch directory
@@ -48,6 +53,11 @@ while 1:
 
 			# Add the screenshot to the list of already uploaded shots
 			macgrab.write(screenshot)
+
+			# Play a sound for confirmation
+			# TODO: If growl's python APIs weren't terrible there would be a visual notification here
+			notif.stop()
+			notif.play()
 	
 	# Sleep for a bit, since we don't need to be doing this all the time.
 	time.sleep(1)
