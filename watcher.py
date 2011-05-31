@@ -6,6 +6,7 @@
 #
 import os, time, re, logging
 import macgrab
+from AppKit import NSPasteboard
 
 # Get the config file
 config = macgrab.getConfig()
@@ -34,6 +35,10 @@ while 1:
 			# If it worked, tell us the URL, else tell us what went wrong.
 			if status:
 				print "Screenshot uploaded successfully! URL is %s" % resp['original_image']
+				# Now copy the URL to the clipboard
+				pb = NSPasteboard.generalPasteboard()
+				pb.clearContents()
+				pb.writeObjects_([resp['original_image']])
 			else:
 				print "There was an error while trying to upload the screenshot: %s" % resp
 	
