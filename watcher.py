@@ -6,6 +6,7 @@
 #
 import os, time, re, logging
 import macgrab
+from ConfigParser import NoOptionError
 from AppKit import NSPasteboard, NSSound
 
 # Get the config file
@@ -16,9 +17,13 @@ watch_path = config.get("general","watch_path")
 screenshot_regex = re.compile("Screen shot ([0-9]{4})-([0-9]{2})-([0-9]{2}) at (1?[0-9]).([0-9]{2}).([0-9]{2}) ([A|PM]{2}).png")	
 
 # Setup the NSSound object for the "Success" notification
-#TODO: Add a config option for the sound
+try:
+	sound = config.get('general', 'sound')
+except NoOptionError:
+	sound = '/System/Library/Sounds/Purr.aiff'
+
 notif = NSSound.alloc()
-notif.initWithContentsOfFile_byReference_('/System/Library/Sounds/Purr.aiff', True)
+notif.initWithContentsOfFile_byReference_(sound, True)
 
 while 1:
 	# Get a list of filenames in the watch directory

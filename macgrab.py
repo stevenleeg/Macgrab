@@ -35,6 +35,7 @@ def getConfig():
 	else:
 		config.add_section("general")
 		config.set("general", "watch_path", os.path.join(os.path.expanduser("~"), "Desktop"))
+		config.set("general", "sound", '/System/Library/Sounds/Purr.aiff')
 		
 		# Write the newly generated config file
 		with open(os.path.join(config_path, "macgrab.conf"), 'wb') as file:
