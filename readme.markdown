@@ -5,7 +5,9 @@ Macgrab is a simple alternative to screenshot uploading software such as GrabUp 
 Well why not? I love programming and especially in Python! Most of my inspiration for making this project in particular was my dissaproval ofTinyGrab's latest release: 2.0. For some reason, they decided it would be best to use links to a webpage rather than the original image, which was a minor inconvenience to me as I like to embed screenshots directly into emails. Since I had some free time, I figured it'd be fun to write a small alternative to TinyGrab in python and learn a thing or two about pyobjc and the imgur API.
 
 ## Using macgrab
-Download the latest revision of Macgrab from the github repository by running the following command in the directory you'd like to store the application.
+Before starting, make sure you're on a mac and have installed the pycurl library. In most cases, this is as easy as running `easy_install pycurl`.
+
+Now that we have that out of the way, go ahead and download the latest revision of Macgrab from the github repository. You can do this by running the following command in the directory you'd like to store the application:
 
     git clone git://github.com/stevenleeg/Macgrab.git
 
