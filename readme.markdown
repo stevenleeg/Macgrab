@@ -15,5 +15,12 @@ Once you have the files, just run `python watcher.py` and you're good to go, To 
 
 If you want to run Macgrab without having to leave a terminal window open, just run `python watcher.py &`. This will spawn a new process in the background, allowing you to exit out of the terminal while still being able to have your screenshots uploaded.
 
+## Configuring macgrab
+After running macgrab for the first time, a new directory in your home folder called .macgrab is created. In this directory is the defaul configuration file, macgrab.conf, which you can edit to your liking. Here are the options:
+
+* `watch_path`: The directory macgrab will watch for new screenshots. Defaults to ~/Desktop
+* `sound`: The path to a sound file which is played after every upload. Defaults to /System/Library/Sounds/Purr.aiff
+* `post_delete`: If set to true, macgrab will delete screenshots after a successful upload. Defaults to false.
+
 ## Licensing
 Because this project was created for the purpose of education, I encourage anybody to take my work and learn from it by doing whatever you'd like with it! For this reason, this project is licensed under the [MIT License](http://www.opensource.org/licenses/mit-license.php)
