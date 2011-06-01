@@ -63,6 +63,15 @@ while 1:
 			# TODO: If growl's python APIs weren't terrible there would be a visual notification here
 			notif.stop()
 			notif.play()
+
+			# If we're told to, delete the screenshot afterwards
+			try:
+				delshot = config.getboolean('general','post_delete')
+			except NoOptionError:
+				delshot = False
+			
+			if delshot:
+				os.remove(os.path.join(watch_path, screenshot))
 	
 	# Sleep for a bit, since we don't need to be doing this all the time.
 	time.sleep(1)
