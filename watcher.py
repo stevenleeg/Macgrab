@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #
 # Macgrab - A simple TinyGrab alternative
 # Written by Steve Gattuso
