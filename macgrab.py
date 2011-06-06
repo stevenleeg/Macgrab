@@ -4,19 +4,7 @@
 # http://www.stevegattuso.me // @vestonian
 # Distributed under the MIT license
 #
-import os, ConfigParser, pycurl, json
-
-class ResponseHandler:
-	""" Used to handle responses from the imgur api"""
-	def __init__(self):
-		self.contents = ''
-	
-	def write(self, buff):
-		self.contents += buff
-	
-	def parse(self):
-		#TODO: Be ready for a non-json response and react appropriately
-		return json.loads(self.contents)
+import os, ConfigParser, json, base64, urllib, urllib2
 
 def getConfig():
 	# Find the config directory and create it if it doesn't already exist
@@ -51,29 +39,18 @@ def getConfig():
 
 #TODO: Use imgur's authentication UI instead of anonymous
 def upload(path):
-	send = pycurl.Curl()
+    data = {
+        'key': 'bbc8f922180d480cdf32bce06e47eefa',
+        'image': base64.b64encode(open(path).read()),
+    }
 
-	# Setup the post values to send to imgur
-	values = [
-		('key', 'bbc8f922180d480cdf32bce06e47eefa'),
-		('image', (send.FORM_FILE, path))
-	]
-	
-	# Initiate a ResponseHandler object to capture imgur's response
-	handler = ResponseHandler()
+    data = urllib.urlencode(data)
+    req = urllib2.urlopen("http://imgur.com/api/upload.json", data=data)
+    response = json.loads(req.read())
 
-	# Set the options and send imgur a picture
-	send.setopt(send.URL, "http://imgur.com/api/upload.json")
-	send.setopt(send.HTTPPOST, values)
-	send.setopt(send.WRITEFUNCTION, handler.write)
-	send.perform()
-	
-	# React to the response
-	resp = handler.parse()['rsp']
-	if resp['stat'] == 'ok':
-		return (True, resp['image'])
-	else:
-		return (False, resp['error_msg'])
+    if req.code == 200:
+        return (True, response["rsp"]["image"])
+    return (False, response["rsp"]["error_msg"])
 
 def write(filename):
 	""" Writes the filename to the database so we know not to upload it again"""
