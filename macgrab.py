@@ -4,7 +4,9 @@
 # http://www.stevegattuso.me // @vestonian
 # Distributed under the MIT license
 #
-import os, ConfigParser, json, base64, urllib, urllib2
+import os, ConfigParser, json, base64, urllib, urllib2, logging
+
+screenshotsOnDesktop = set()
 
 def getConfig():
 	# Find the config directory and create it if it doesn't already exist
@@ -29,44 +31,31 @@ def getConfig():
 		# Write the newly generated config file
 		with open(os.path.join(config_path, "macgrab.conf"), 'wb') as file:
 			config.write(file)
-
-		# Make an uploaded.db file
-		with open(os.path.join(config_path, "uploaded.db"), 'w') as file:
-			file.write('# This file stores the filenames of screenshots already uploaded\n')
-			file.close()
 	
 	return config
 
 #TODO: Use imgur's authentication UI instead of anonymous
 def upload(path):
-    data = {
+	data = {
         'key': 'bbc8f922180d480cdf32bce06e47eefa',
         'image': base64.b64encode(open(path).read()),
     }
 
-    data = urllib.urlencode(data)
-    req = urllib2.urlopen("http://imgur.com/api/upload.json", data=data)
-    response = json.loads(req.read())
+	data = urllib.urlencode(data)
+	req = urllib2.urlopen("http://imgur.com/api/upload.json", data=data)
+	response = json.loads(req.read())
 
-    if req.code == 200:
-        return (True, response["rsp"]["image"])
-    return (False, response["rsp"]["error_msg"])
+	if req.code == 200:
+		return (True, response["rsp"]["image"])
+	return (False, response["rsp"]["error_msg"])
 
-def write(filename):
+def addUploaded(filename):
 	""" Writes the filename to the database so we know not to upload it again"""
-	f = open(os.path.join(os.path.expanduser('~'), '.macgrab/uploaded.db'), 'a')
-	f.write(filename + "\n")
-	f.close()
+	screenshotsOnDesktop.add(filename)
 
-def uploaded(filename):
+def isUploaded(filename):
 	""" Reads the database file and tells us if filename has already been uploaded or not """
-	f = open(os.path.join(os.path.expanduser('~'), '.macgrab/uploaded.db'), 'r')
-	for line in f.readlines():
-		if filename == line.replace('\n', ''):
-			return True
-	f.close()
-	# We never detected it, so return false
-	return False
+	return filename in screenshotsOnDesktop
 
 # Run tests
 if __name__ == "__main__":
