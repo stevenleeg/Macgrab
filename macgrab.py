@@ -5,8 +5,13 @@
 # Distributed under the MIT license
 #
 import os, ConfigParser, json, base64, urllib, urllib2, logging
+from AppKit import NSSpeechSynthesizer
 
+# keep track of existing screen shots
 screenshotsOnDesktop = set()
+
+# for debugging
+noUpload = False
 
 def getConfig():
 	# Find the config directory and create it if it doesn't already exist
@@ -36,6 +41,10 @@ def getConfig():
 
 #TODO: Use imgur's authentication UI instead of anonymous
 def upload(path):
+	
+	if(noUpload):
+		return (True, {'original_image': 'http://test'})
+	
 	data = {
         'key': 'bbc8f922180d480cdf32bce06e47eefa',
         'image': base64.b64encode(open(path).read()),
@@ -56,6 +65,11 @@ def addUploaded(filename):
 def isUploaded(filename):
 	""" Reads the database file and tells us if filename has already been uploaded or not """
 	return filename in screenshotsOnDesktop
+
+def say(txt):
+	voice = NSSpeechSynthesizer.defaultVoice()
+	speech = NSSpeechSynthesizer.alloc().initWithVoice_(voice)
+	speech.startSpeakingString_(txt)
 
 # Run tests
 if __name__ == "__main__":
