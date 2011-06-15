@@ -37,9 +37,9 @@ def getConfig():
 #TODO: Use imgur's authentication UI instead of anonymous
 def upload(path):
 	data = {
-        'key': 'bbc8f922180d480cdf32bce06e47eefa',
-        'image': base64.b64encode(open(path).read()),
-    }
+		'key': 'bbc8f922180d480cdf32bce06e47eefa',
+		'image': base64.b64encode(open(path).read()),
+	}
 
 	data = urllib.urlencode(data)
 	req = urllib2.urlopen("http://imgur.com/api/upload.json", data=data)
